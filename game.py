@@ -9,10 +9,9 @@ class Game:
     def __init__(self):
         self.side = 10
         self.snake = Snake()
-        self.strategy = RandomStrategy(self)
+        self.strategy = CloserStrategy(self)
         self.end = False
         self.number_of_moves = 0
-
 
         food_coords = {'x': 3, 'y': 3}
         self.food = Food(food_coords)
@@ -109,7 +108,7 @@ class Game:
         """ The main game loop """
         while not self.end:
             self.next_move()
-            time.sleep(0.1)
+            time.sleep(0.01)
 
     # todo: end_game
 
@@ -136,37 +135,50 @@ class Game:
         return x < 0 or x > self.side - 1 or y < 0 or y > self.side - 1
 
     def get_neighbours(self, x, y):
-        # todo: test
-
-        """ Return list of 4 tuples that are next to (x, y) """
-        result = [(x - 1, y), (x + 1, y), (x, y + 1), (x, y - 1)]
+        """ Return list of 4 dicts that are next to [x, y] (whether or not are empty) """
+        result = [{'x': x - 1, 'y': y}, {'x': x + 1, 'y': y}, {'x': x, 'y': y + 1}, {'x': x, 'y': y - 1}]
+        for coords in result:
+            if self.is_wall(coords['x'], coords['y']):
+                result.remove(coords)
         return result
 
     def is_neighbour(self, center_x, center_y, x, y):
+        """ Test if two fields are next to each other """
         # todo: test
         for coords in self.get_neighbours(center_x, center_y):
-            if coords[0] == x and coords[1] == y:
+            if coords['x'] == x and coords['y'] == y:
                 return True
         return False
 
-    def get_dir_from_head_to_field(self, x, y):
-        # todo: test
-        if not self.is_neighbour(self.snake.head['x'], self.snake.head['y'], x, y):
+    def get_dir_from_head_to_field(self, coord):
+        """ Return direction to [x, y] from snake's head"""
+
+        head_x = self.snake.head['x']
+        head_y = self.snake.head['y']
+        if not self.is_neighbour(self.snake.head['x'], self.snake.head['y'], coord['x'], coord['y']):
             return self.snake.dir
+
+        if coord['x'] == head_x + 1:
+            return Direction.RIGHT
+        if coord['x'] == head_x - 1:
+            return Direction.LEFT
+        if coord['y'] == head_y + 1:
+            return Direction.DOWN
+        return Direction.UP
 
     def get_available_neighbour_fields(self, x, y):
         # todo: test
-        """ Return list of tuples (coordinates) that are accessible from x, y by 1 move """
-        result = []  # list of tuples (x, y)
+        """ Return list of dictionaries (coordinates) that are accessible from x, y by 1 move """
+        result = []
         if self.is_empty(x - 1, y):
-            result.append((x - 1, y))  # tuple
+            result.append({'x': x - 1, 'y': y})
         if self.is_empty(x + 1, y):
-            result.append((x + 1, y))
+            result.append({'x': x + 1, 'y': y})
         if self.is_empty(x, y + 1):
-            result.append((x, y + 1))
+            result.append({'x': x, 'y': y + 1})
         if self.is_empty(x, y - 1):
-            result.append((x, y - 1))
+            result.append({'x': x, 'y': y - 1})
         return result
 
-game = Game()
 
+game = Game()

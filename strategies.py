@@ -1,11 +1,15 @@
 import random
 
+from sys import maxsize
+
 from snake import Direction
 
 
-# todo: superclass
+def count_distance(coord1, coord2):
+    return ((coord1['x'] - coord2['x'])**2+(coord1['y'] - coord2['y'])**2)**(1/2)
 
-class ForwardStrategy:
+
+class Strategy:
     def __init__(self, game):
         self.game = game
 
@@ -13,10 +17,12 @@ class ForwardStrategy:
         return self.game.snake.dir
 
 
-class VectorStrategy:
-    def __init__(self, game):
-        self.game = game
+class ForwardStrategy(Strategy):
+    def think_and_return_dir(self):
+        return self.game.snake.dir
 
+
+class VectorStrategy(Strategy):
     def think_and_return_dir(self):
         if self.game.food.coords['y'] > self.game.snake.head['y']:
             return Direction.DOWN
@@ -28,24 +34,24 @@ class VectorStrategy:
             return Direction.LEFT
 
 
-class ClosestStrategy:
-    def __init__(self, game):
-        self.game = game
-
+class CloserStrategy(Strategy):
     def think_and_return_dir(self):
         coords = self.game.get_available_neighbour_fields(self.game.snake.head['x'], self.game.snake.head['y'])
 
+        max_distance = maxsize
+
+        dir = self.game.snake.dir
+        
         for coord in coords:
-            self.count_distance(coord, self.game.food.coords)
+            distance = count_distance(coord, self.game.food.coords)
+            if distance < max_distance:
+                max_distance = distance
+                dir = self.game.get_dir_from_head_to_field(coord)
 
-    def count_distance(self, coord1, coord2):
-        return ((coord1['x'] - coord2['x'])**2+(coord1['y'] - coord2['y'])**2)**(1/2)
+        return dir
 
 
-class RandomStrategy:
-    def __init__(self, game):
-        self.game = game
-
+class RandomStrategy(Strategy):
     def think_and_return_dir(self):
         coords = self.game.get_available_neighbour_fields(self.game.snake.head['x'], self.game.snake.head['y'])
         if len(coords) == 0:
@@ -65,10 +71,7 @@ class RandomStrategy:
         return self.game.snake.dir
 
 
-class Player:
-    def __init__(self, game):
-        self.game = game
-
+class Player(Strategy):
     def think_and_return_dir(self):
         key = input()
         if key == 'w':
