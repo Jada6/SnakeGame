@@ -183,6 +183,7 @@ class Game:
         if not self.is_neighbour(self.snake.head, coord):
             return self.snake.dir
 
+        # todo: cycle
         if coord['x'] == head_x + 1:
             return Direction.RIGHT
         if coord['x'] == head_x - 1:
@@ -195,6 +196,7 @@ class Game:
         # todo: test
         """ Return list of dictionaries (coordinates) that are accessible from x, y by 1 move """
         result = []
+        # todo: cycle
         if self.is_empty(x - 1, y):
             result.append({'x': x - 1, 'y': y})
         if self.is_empty(x + 1, y):
@@ -209,6 +211,7 @@ class Game:
     def field_in_dir(coord, dir):
         """ Return the coordinates that are next to coord in dir direction"""
         result_coords = Game.copy_coords(coord)
+        # todo: cycle
         if dir == Direction.RIGHT:
             result_coords['x'] += 1
         elif dir == Direction.LEFT:

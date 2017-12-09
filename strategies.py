@@ -24,6 +24,7 @@ class VectorStrategy(Strategy):
         self.name = "Vector strategy"
 
     def think_and_return_dir(self):
+        # todo: cycle
         if self.game.food.coords['y'] > self.game.snake.head['y']:
             return Direction.DOWN
         elif self.game.food.coords['y'] < self.game.snake.head['y']:

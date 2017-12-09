@@ -1,7 +1,6 @@
 from enum import Enum
 
 
-# should be singleton?
 class Snake:
     """ Represents snake """
     def __init__(self):
@@ -9,7 +8,7 @@ class Snake:
         self.head = {'x': 1, 'y': 0}
         self.tail = Tail(self)
 
-
+# todo: ((0, -1), (1, 0), (0, 1), (-1, 0))
 class Direction(Enum):
     UP = 1
     RIGHT = 2
@@ -25,6 +24,7 @@ class TailNode:
 
 
 # singly linked list
+# todo: represent with python linked list
 class Tail:
     """ Represents tail as a linked list of nodes """
     def __init__(self, snake):
