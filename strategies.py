@@ -24,17 +24,7 @@ class VectorStrategy(Strategy):
         self.name = "Vector strategy"
 
     def think_and_return_dir(self):
-        # todo: cycle
-        if self.game.food.coords['y'] > self.game.snake.head['y']:
-            return Direction.DOWN
-        elif self.game.food.coords['y'] < self.game.snake.head['y']:
-            return Direction.UP
-        elif self.game.food.coords['x'] > self.game.snake.head['x']:
-            return Direction.RIGHT
-        elif self.game.food.coords['x'] < self.game.snake.head['x']:
-            return Direction.LEFT
-
-    # todo: if cant move -> random
+        return self.game.get_dir_from_to(self.game.snake.head, self.game.food.coords)
 
 
 class CloserStrategy(Strategy):
@@ -44,17 +34,15 @@ class CloserStrategy(Strategy):
         self.name = "Closer strategy"
 
     def think_and_return_dir(self):
-        coords = self.game.get_available_neighbour_fields(self.game.snake.head['x'], self.game.snake.head['y'])
-
+        coords = self.game.get_available_neighbour_fields(self.game.snake.head)
         max_distance = maxsize
-
         dir = self.game.snake.dir
         
         for coord in coords:
             distance = count_distance(coord, self.game.food.coords)
             if distance < max_distance:
                 max_distance = distance
-                dir = self.game.get_dir_from_head_to_neighbour_field(coord)
+                dir = self.game.get_dir_from_to(self.game.snake.head, coord)
 
         return dir
 
@@ -66,14 +54,14 @@ class RandomStrategy(Strategy):
         self.name = "Random strategy"
 
     def think_and_return_dir(self):
-        coords = self.game.get_available_neighbour_fields(self.game.snake.head['x'], self.game.snake.head['y'])
+        coords = self.game.get_available_neighbour_fields(self.game.snake.head)
         if len(coords) == 0:
-            return Direction.UP
+            return Direction.UP  # just give up if there is nowhere to move
 
         random_number = random.randint(0, len(coords)-1)
         coord = coords[random_number]
 
-        return self.game.get_dir_from_head_to_neighbour_field(coord)
+        return self.game.get_dir_from_to(self.game.snake.head, coord)
 
 
 class Player(Strategy):

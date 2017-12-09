@@ -8,12 +8,12 @@ class Snake:
         self.head = {'x': 1, 'y': 0}
         self.tail = Tail(self)
 
-# todo: ((0, -1), (1, 0), (0, 1), (-1, 0))
+
 class Direction(Enum):
-    UP = 1
-    RIGHT = 2
-    DOWN = 3
-    LEFT = 4
+    RIGHT = (1, 0)
+    LEFT = (-1, 0)
+    UP = (0, -1)
+    DOWN = (0, 1)
 
 
 class TailNode:

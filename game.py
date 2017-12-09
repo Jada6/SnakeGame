@@ -25,7 +25,7 @@ class Game:
         coords = {'x': 0, 'y': 0}
         self.snake.tail.add_node(coords)
         self.new_food()
-        # self.draw_field()
+        self.draw_field()
 
     def set_strategy(self, number):
         if number == 0:
@@ -49,8 +49,9 @@ class Game:
             self.number_of_moves += 1
 
     def draw_field(self):
+        """ If the printing is set, draw whole field in console:
+        blank place ., wall #, snake tail o, snake head O and food @ """
         if self.print_game:
-            """ Draw whole field in terminal: blank place ., snake tail o, snake head O and food @ """
             for y in range(-1, self.side+1):
                 for x in range(-1, self.side+1):
                     if self.is_snake_head(x, y):
@@ -73,8 +74,6 @@ class Game:
         head_before_move_coords = Game.copy_coords(self.snake.head)
 
         self.snake.head = self.field_in_dir(self.snake.head, self.snake.dir)
-
-        # todo: tests
         head_x = self.snake.head['x']
         head_y = self.snake.head['y']
 
@@ -119,8 +118,8 @@ class Game:
         """ The output after the game is over """
         if self.print_game:
             print("Game over")
-            print("Vysledky: ", self.get_strategy_in_text(), " - za ", self.number_of_moves, " kroku posbirala ",
-                  self.snake.tail.number_of_nodes, " jidel.")
+            print("Results: ", self.get_strategy_in_text(), " - after ", self.number_of_moves, " moves collected ",
+                  self.snake.tail.number_of_nodes, " food.")
         return {
             'strategy': self.get_strategy_in_text(),
             'moves': self.number_of_moves,
@@ -138,18 +137,13 @@ class Game:
                (self.snake.tail.last.coords['x'] == x and self.snake.tail.last.coords['y'] == y)
 
     def is_snake_head(self, x, y):
-        """ Return True if snake head is on [x, y] """
         return self.snake.head['x'] == x and self.snake.head['y'] == y
 
-    # bad efficiency
     def is_snake_tail(self, x, y):
-        """ Return True if snake's tailNode is on [x, y] """
         coords = {'x': x, 'y': y}
         return self.snake.tail.is_node_on_coords(coords)
-        # todo: bool list
 
     def is_food(self, x, y):
-        """ Return True if food is on [x, y] """
         return self.food.coords['x'] == x and self.food.coords['y'] == y
 
     def is_wall(self, x, y):
@@ -172,54 +166,41 @@ class Game:
                 return True
         return False
 
-    #def get_dir_from_head_to_far_field(self, coord):
+    def get_dir_from_to(self, from_coord, where_coord):
+        vectors = [direction.value for direction in Direction]
 
+        # for dir in ['x', 'y']
+        for vector in vectors[:2]:
+            if (where_coord['x'] - from_coord['x']) * vector[0] > 0:
+                return Direction(vector)
 
-    def get_dir_from_head_to_neighbour_field(self, coord):
-        """ Return direction to [x, y] from snake's head"""
+        for vector in vectors[2:4]:
+            if (where_coord['y'] - from_coord['y']) * vector[1] > 0:
+                return Direction(vector)
 
-        head_x = self.snake.head['x']
-        head_y = self.snake.head['y']
-        if not self.is_neighbour(self.snake.head, coord):
-            return self.snake.dir
+        return self.snake.dir
 
-        # todo: cycle
-        if coord['x'] == head_x + 1:
-            return Direction.RIGHT
-        if coord['x'] == head_x - 1:
-            return Direction.LEFT
-        if coord['y'] == head_y + 1:
-            return Direction.DOWN
-        return Direction.UP
-
-    def get_available_neighbour_fields(self, x, y):
+    def get_available_neighbour_fields(self, coords):
         # todo: test
         """ Return list of dictionaries (coordinates) that are accessible from x, y by 1 move """
+        x = coords['x']
+        y = coords['y']
         result = []
-        # todo: cycle
-        if self.is_empty(x - 1, y):
-            result.append({'x': x - 1, 'y': y})
-        if self.is_empty(x + 1, y):
-            result.append({'x': x + 1, 'y': y})
-        if self.is_empty(x, y + 1):
-            result.append({'x': x, 'y': y + 1})
-        if self.is_empty(x, y - 1):
-            result.append({'x': x, 'y': y - 1})
+        vectors = [direction.value for direction in Direction]
+        for vector in vectors:
+            new_x = x + vector[0]
+            new_y = y + vector[1]
+            if self.is_empty(new_x, new_y):
+                result.append({'x': new_x, 'y': new_y})
         return result
 
     @staticmethod
     def field_in_dir(coord, dir):
         """ Return the coordinates that are next to coord in dir direction"""
         result_coords = Game.copy_coords(coord)
-        # todo: cycle
-        if dir == Direction.RIGHT:
-            result_coords['x'] += 1
-        elif dir == Direction.LEFT:
-            result_coords['x'] -= 1
-        elif dir == Direction.UP:
-            result_coords['y'] -= 1
-        elif dir == Direction.DOWN:
-            result_coords['y'] += 1
+        result_coords['x'] += dir.value[0]
+        result_coords['y'] += dir.value[1]
+
         return result_coords
 
     def can_move_there(self, dir):
