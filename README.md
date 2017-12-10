@@ -14,7 +14,9 @@ The program is implemented using OOP. The main classes are: Game, Snake, Food an
 There are three strategies: random, vector and closer. Random just moves to a random free field. Vector strategy goes straight ahead until it reaches the same x coordinate as the food and then the same with the y coordinate, but it does not care whether the field is free or not. The closer strategy finds the closest field to food from all free neighbour fields and goes there.
 
 ## Statistics
-There are two main factors which change among the strategies: the length of the snake at the end and the number of moves at the end. I examined only the length, because it is more interesting. The first graph shows final length of the snake after one game. Games where played on increasing field from 3x3 up to 29x29 field. You can see that vector and closer are randomly oscilating, so there goes second graph showing the same idea, but played on 1 000 games on each field. The third picture is a histogram showing percentage of games ended with certain length of the snake.
+There are two main factors which change among the strategies: the length of the snake at the end and the number of moves at the end. I examined only the length, because it is more interesting.
+
+The first graph shows the final length of the snake after one game. Games were played on increasing field from 3x3 up to 29x29 field. You can see that vector and closer are randomly oscilating, so there goes second graph showing the same idea, but played on 1 000 games on each field. The third picture is a histogram showing percentage of games ended with certain length of the snake.
 
 ![Graph1](increasing_field_1.png)
 ![Graph2](increasing_field_1000.png)

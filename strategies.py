@@ -9,6 +9,9 @@ def count_distance(coord1, coord2):
 
 
 class Strategy:
+    strategies = {0: 'Random strategy', 1: 'Vector strategy', 2: 'Closer strategy'}
+    # dictionary because of easy access to the numbers
+
     def __init__(self, game):
         self.game = game
         self.name = None
@@ -22,7 +25,7 @@ class VectorStrategy(Strategy):
     """ Firstly come to the same y, than to the same x"""
     def __init__(self, game):
         super(VectorStrategy, self).__init__(game)
-        self.name = "Vector strategy"
+        self.name = Strategy.strategies[1]
 
     def think(self):
         return self.game.get_dir_from_to(self.game.snake.head, self.game.food.coords)
@@ -32,7 +35,7 @@ class CloserStrategy(Strategy):
     """ Come to the closest available neighbour field """
     def __init__(self, game):
         super(CloserStrategy, self).__init__(game)
-        self.name = "Closer strategy"
+        self.name = Strategy.strategies[2]
 
     def think(self):
         coords = self.game.get_available_neighbour_fields(self.game.snake.head)
@@ -52,7 +55,7 @@ class RandomStrategy(Strategy):
     """ Come to a random neighbour """
     def __init__(self, game):
         super(RandomStrategy, self).__init__(game)
-        self.name = "Random strategy"
+        self.name = Strategy.strategies[0]
 
     def think(self):
         coords = self.game.get_available_neighbour_fields(self.game.snake.head)

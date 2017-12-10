@@ -56,7 +56,7 @@ class Game:
                     else:
                         print('.', end=' ')  # nothing
                 print()
-            #print('Debug: Snake head: ', self.snake.head['x'], self. snake.head['y'])
+            # print('Debug: Snake head: ', self.snake.head['x'], self. snake.head['y'])
             print("Length of the tail:", len(self.snake.tail))
             print("Number of moves:", self.number_of_moves)
 
@@ -75,10 +75,8 @@ class Game:
         # Move tail
         else:
             snake.move(head_before_move_coords)
-
-            #snake.tail.last.coords = head_before_move_coords
-            #snake.tail.move_tail()
-            if self.is_snake_tail(head['x'], head['y']) or self.is_wall(head['x'], head['y']):
+            if self.is_snake_tail(head['x'], head['y']) \
+                    or self.is_wall(head['x'], head['y']):
                 self.end = True
 
     def new_food(self):
@@ -114,7 +112,7 @@ class Game:
             'eaten': len(self.snake.tail)
         }
 
-# i/o functions:
+    # i/o functions:
     def get_strategy_in_text(self):
         return self.__strategy.name
 
@@ -123,8 +121,10 @@ class Game:
 
     def is_empty(self, x, y):
         """ Return True if snake can move to [x, y]"""
-        return not self.is_snake_head(x, y) and not self.is_snake_tail(x, y) and not self.is_wall(x, y) or \
-            (self.snake.tail[0]['x'] == x and self.snake.tail[0]['y'] == y)
+        return not self.is_snake_head(x, y) \
+            and not self.is_snake_tail(x, y) \
+            and not self.is_wall(x, y) \
+            or (self.snake.tail[0]['x'] == x and self.snake.tail[0]['y'] == y)
 
     def is_snake_head(self, x, y):
         return self.snake.head['x'] == x and self.snake.head['y'] == y
@@ -179,9 +179,3 @@ class Game:
         for i in range(2):
             coord[i] = random.randint(0, self.side - 1)
         return coord
-    '''
-    def can_move_there(self, dir):
-        """ Return True is snake can move 1 field in direction dir """
-        coord = self.field_in_dir(self.snake.head, dir)
-        return self.is_empty(coord['x'], coord['y'])
-    '''

@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 def demo():
     """ Visual demo """
-    game = Game(10, True)
+    game = Game(5, True)
     game.game_cycle()
 
 
@@ -20,20 +20,15 @@ def increasing_field_statistics(repetitions):
     for length in range(initial_length, final_length):
         game = Game(length)
         for _ in range(repetitions):
-            for strategy in range(3):
+            for strategy in range(len(Strategy.strategies)):
                 game.set_strategy(strategy)
                 result[strategy][length-initial_length] += game.game_cycle()['eaten']
 
     average = [[x/repetitions for x in strategy] for strategy in result]
 
     # Draw the graph
-    for number, strategy in {0: 'Random strategy', 1: 'Vector strategy', 2: 'Closer strategy'}.items():
+    for number, strategy in Strategy.strategies.items():
         plt.plot([i + 3 for i in range(len(result[number]))], [x for x in average[number]], label=strategy)
-    '''
-    plt.plot([i + 3 for i in range(len(result[0]))], [x for x in average[0]], label='Random strategy')
-    plt.plot([i + 3 for i in range(len(result[1]))], [x for x in average[1]], label='Vector strategy')
-    plt.plot([i + 3 for i in range(len(result[2]))], [x for x in average[2]], label='Closer strategy')
-    '''
     plt.legend()
 
     plt.suptitle('Snake game statistics')
@@ -41,6 +36,7 @@ def increasing_field_statistics(repetitions):
     title += "length of the snake after " + str(repetitions)
     title += " game" if repetitions == 1 else " games"
     plt.title(title)
+
     plt.ylabel('Final length of snake')
     plt.xlabel('Size of the field')
     plt.savefig("increasing_field_" + str(repetitions) + ".png")
@@ -57,20 +53,21 @@ def tail_distribution():
     size = 10
     game = Game(size)
     repetition = 100
-    result = [[0 for _ in range(repetition)] for _ in range(3)]
+    result = [[0 for _ in range(repetition)] for _ in range(len(Strategy.strategies))]
 
     # Collect data
-    for strategy in range(3):
+    for strategy in range(len(Strategy.strategies)):
         game.set_strategy(strategy)
         for i in range(repetition):
             result[strategy][i] = game.game_cycle()['eaten']
 
+    # Create graph
     bin = [i*5 for i in range(0, 9)]
     plt.hist(([x for x in result[0]], [x for x in result[1]], [x for x in result[2]]),
              bin,
              alpha=0.8,
              rwidth=0.8,
-             label=["RandomStrategy", "VectorStrategy", "CloserStrategy"])
+             label=[strategy for strategy in Strategy.strategies.values()])
     plt.legend()
     plt.suptitle("Snake game statistics")
     plt.title("Percentage of games ended on 10x10 field")
@@ -79,9 +76,15 @@ def tail_distribution():
     plt.savefig("tail.png")
 
 
-#demo()
+def main():
+    """ One demo game and three graphs """
+    demo()
 
-increasing_field_statistics(1)
-increasing_field_statistics(10)
+    increasing_field_statistics(1)
+    increasing_field_statistics(10)
 
-tail_distribution()
+    tail_distribution()
+
+
+if __name__ == "__main__":
+    main()
