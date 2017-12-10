@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 
 # Demo of Snake
 def demo():
-    game = Game(5, True)
+    game = Game(10, True)
+    game.set_strategy(1)
     game.game_cycle()
 
 
@@ -44,6 +45,8 @@ def increasing_field_statistics(repetitions):
 
 
 def tail_distribution():
+    """ Collect statistics and create graph showing
+    percentage of games ended with certain length of the snake on 10x10 field """
     size = 10
     game = Game(size)
     repetition = 100
@@ -63,15 +66,15 @@ def tail_distribution():
              label=["RandomStrategy", "VectorStrategy", "CloserStrategy"])
     plt.legend()
     plt.suptitle("Snake game statistics")
-    plt.title("Percentage of games ended with certain length of the snake")
+    plt.title("Percentage of games ended on 10x10 field")
     plt.xlabel("Length of the snake")
     plt.ylabel("Percentage of games")
     plt.savefig("tail.png")
 
 
-demo()
+#demo()
 
-increasing_field_statistics(1)
-increasing_field_statistics(100)
+#increasing_field_statistics(1)
+increasing_field_statistics(1000)
 
-tail_distribution()
+#tail_distribution()
