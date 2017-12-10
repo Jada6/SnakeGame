@@ -13,7 +13,8 @@ class Strategy:
         self.game = game
         self.name = None
 
-    def think_and_return_dir(self):
+    def think(self):
+        """ The strategy logic. Return the next desired direction of the snake. """
         return self.game.snake.dir
 
 
@@ -23,7 +24,7 @@ class VectorStrategy(Strategy):
         super(VectorStrategy, self).__init__(game)
         self.name = "Vector strategy"
 
-    def think_and_return_dir(self):
+    def think(self):
         return self.game.get_dir_from_to(self.game.snake.head, self.game.food.coords)
 
 
@@ -33,7 +34,7 @@ class CloserStrategy(Strategy):
         super(CloserStrategy, self).__init__(game)
         self.name = "Closer strategy"
 
-    def think_and_return_dir(self):
+    def think(self):
         coords = self.game.get_available_neighbour_fields(self.game.snake.head)
         max_distance = maxsize
         dir = self.game.snake.dir
@@ -53,7 +54,7 @@ class RandomStrategy(Strategy):
         super(RandomStrategy, self).__init__(game)
         self.name = "Random strategy"
 
-    def think_and_return_dir(self):
+    def think(self):
         coords = self.game.get_available_neighbour_fields(self.game.snake.head)
         if len(coords) == 0:
             return Direction.UP  # just give up if there is nowhere to move
@@ -66,7 +67,7 @@ class RandomStrategy(Strategy):
 
 class Player(Strategy):
     """ Just for debugging """
-    def think_and_return_dir(self):
+    def think(self):
         key = input()
         if key == 'w':
             return Direction.UP

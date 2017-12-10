@@ -33,7 +33,7 @@ class Game:
             self.__strategy = CloserStrategy(self)
 
     def next_move(self):
-        self.snake.dir = self.__strategy.think_and_return_dir()
+        self.snake.dir = self.__strategy.think()
         self.move_snake_forward()
         self.draw_field()
         if not self.end:
