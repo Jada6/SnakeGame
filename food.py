@@ -1,5 +1,4 @@
 class Food:
-    """ Represents food """
     def __init__(self, game, coords):
         self.game = game
         self.coords = coords

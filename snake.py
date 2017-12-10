@@ -2,11 +2,11 @@ from enum import Enum
 
 
 class Snake:
-    """ Represents snake """
     def __init__(self):
         self.dir = Direction.RIGHT
         self.head = {'x': 1, 'y': 0}
         self.tail = Tail(self)
+        self.tail.add_node({'x': 0, 'y': 0})
 
 
 class Direction(Enum):
