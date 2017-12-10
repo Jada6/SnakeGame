@@ -57,24 +57,27 @@ class Game:
                         print('.', end=' ')  # nothing
                 print()
             #print('Debug: Snake head: ', self.snake.head['x'], self. snake.head['y'])
-            print("Length of the tail:", self.snake.tail.number_of_nodes)
+            print("Length of the tail:", len(self.snake.tail))
             print("Number of moves:", self.number_of_moves)
 
     def move_snake_forward(self):
         """ Move snake on the field in its Direction """
-        head_before_move_coords = self.copy_coords(self.snake.head)
+        snake = self.snake
+        head_before_move_coords = self.copy_coords(snake.head)
 
-        self.move_head_in_dir(self.snake.dir)
-        head = self.snake.head
+        snake.move_head_in_dir()
+        head = snake.head
 
         # Eat food
         if self.is_food(head['x'], head['y']):
-            self.snake.tail.add_node(head_before_move_coords)
+            snake.tail.append(head_before_move_coords)
             self.new_food()
         # Move tail
         else:
-            self.snake.tail.last.coords = head_before_move_coords
-            self.snake.tail.move_tail()
+            snake.move(head_before_move_coords)
+
+            #snake.tail.last.coords = head_before_move_coords
+            #snake.tail.move_tail()
             if self.is_snake_tail(head['x'], head['y']) or self.is_wall(head['x'], head['y']):
                 self.end = True
 
@@ -103,12 +106,12 @@ class Game:
         """ The output after the game is over """
         if self.print_game:
             print("\n_____ Game over _____")
-            print(self.get_strategy_in_text(), "collected", self.snake.tail.number_of_nodes,
+            print(self.get_strategy_in_text(), "collected", len(self.snake.tail),
                   "food after", self.number_of_moves, "moves.")
         return {
             'strategy': self.get_strategy_in_text(),
             'moves': self.number_of_moves,
-            'eaten': self.snake.tail.number_of_nodes
+            'eaten': len(self.snake.tail)
         }
 
 # i/o functions:
@@ -121,14 +124,14 @@ class Game:
     def is_empty(self, x, y):
         """ Return True if snake can move to [x, y]"""
         return not self.is_snake_head(x, y) and not self.is_snake_tail(x, y) and not self.is_wall(x, y) or \
-            (self.snake.tail.last.coords['x'] == x and self.snake.tail.last.coords['y'] == y)
+            (self.snake.tail[0]['x'] == x and self.snake.tail[0]['y'] == y)
 
     def is_snake_head(self, x, y):
         return self.snake.head['x'] == x and self.snake.head['y'] == y
 
     def is_snake_tail(self, x, y):
         coords = {'x': x, 'y': y}
-        return self.snake.tail.is_node_on_coords(coords)
+        return self.snake.is_node_on_coords(coords)
 
     def is_food(self, x, y):
         return self.food.coords['x'] == x and self.food.coords['y'] == y
@@ -170,10 +173,6 @@ class Game:
             if self.is_empty(new_x, new_y):
                 result.append({'x': new_x, 'y': new_y})
         return result
-
-    def move_head_in_dir(self, dir):
-        self.snake.head['x'] += dir.value[0]
-        self.snake.head['y'] += dir.value[1]
 
     def random_coord(self):
         coord = [0, 0]

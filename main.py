@@ -2,14 +2,16 @@ from game import *
 import matplotlib.pyplot as plt
 
 
-# Demo of Snake
 def demo():
+    """ Visual demo """
     game = Game(10, True)
-    game.set_strategy(1)
     game.game_cycle()
 
 
 def increasing_field_statistics(repetitions):
+    """ Play games, collect data and create a graph.
+    After every game, expand the field and play again for repetition times.
+    The graph shows average final length of the snake """
     initial_length = 3
     final_length = 30
     result = [[0 for _ in range(final_length-initial_length)] for _ in range(3)]
@@ -24,9 +26,14 @@ def increasing_field_statistics(repetitions):
 
     average = [[x/repetitions for x in strategy] for strategy in result]
 
+    # Draw the graph
+    for number, strategy in {0: 'Random strategy', 1: 'Vector strategy', 2: 'Closer strategy'}.items():
+        plt.plot([i + 3 for i in range(len(result[number]))], [x for x in average[number]], label=strategy)
+    '''
     plt.plot([i + 3 for i in range(len(result[0]))], [x for x in average[0]], label='Random strategy')
     plt.plot([i + 3 for i in range(len(result[1]))], [x for x in average[1]], label='Vector strategy')
     plt.plot([i + 3 for i in range(len(result[2]))], [x for x in average[2]], label='Closer strategy')
+    '''
     plt.legend()
 
     plt.suptitle('Snake game statistics')
@@ -74,7 +81,7 @@ def tail_distribution():
 
 #demo()
 
-#increasing_field_statistics(1)
-increasing_field_statistics(1000)
+increasing_field_statistics(1)
+increasing_field_statistics(10)
 
-#tail_distribution()
+tail_distribution()
