@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 def demo():
     """ Visual demo """
     game = Game(5, True)
+    game.set_strategy(1)
     game.game_cycle()
 
 
@@ -22,13 +23,15 @@ def increasing_field_statistics(repetitions):
         for _ in range(repetitions):
             for strategy in range(len(Strategy.strategies)):
                 game.set_strategy(strategy)
-                result[strategy][length-initial_length] += game.game_cycle()['eaten']
+                result[strategy][length-initial_length] \
+                    += game.game_cycle()['eaten']
 
     average = [[x/repetitions for x in strategy] for strategy in result]
 
     # Draw the graph
     for number, strategy in Strategy.strategies.items():
-        plt.plot([i + 3 for i in range(len(result[number]))], [x for x in average[number]], label=strategy)
+        plt.plot([i + 3 for i in range(len(result[number]))],
+                 [x for x in average[number]], label=strategy)
     plt.legend()
 
     plt.suptitle('Snake game statistics')
@@ -48,12 +51,13 @@ def increasing_field_statistics(repetitions):
 
 
 def tail_distribution():
-    """ Collect statistics and create graph showing
-    percentage of games ended with certain length of the snake on 10x10 field """
+    """ Collect statistics and create graph showing percentage of games
+    ended with certain length of the snake on 10x10 field """
     size = 10
     game = Game(size)
     repetition = 100
-    result = [[0 for _ in range(repetition)] for _ in range(len(Strategy.strategies))]
+    result = [[0 for _ in range(repetition)]
+              for _ in range(len(Strategy.strategies))]
 
     # Collect data
     for strategy in range(len(Strategy.strategies)):
@@ -63,7 +67,9 @@ def tail_distribution():
 
     # Create graph
     bin = [i*5 for i in range(0, 9)]
-    plt.hist(([x for x in result[0]], [x for x in result[1]], [x for x in result[2]]),
+    plt.hist(([x for x in result[0]],
+              [x for x in result[1]],
+              [x for x in result[2]]),
              bin,
              alpha=0.8,
              rwidth=0.8,
@@ -81,7 +87,7 @@ def main():
     demo()
 
     increasing_field_statistics(1)
-    increasing_field_statistics(10)
+    increasing_field_statistics(1000)
 
     tail_distribution()
 

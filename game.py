@@ -56,7 +56,8 @@ class Game:
                     else:
                         print('.', end=' ')  # nothing
                 print()
-            # print('Debug: Snake head: ', self.snake.head['x'], self. snake.head['y'])
+            # print('Debug: Snake head: ',
+            # self.snake.head['x'], self. snake.head['y'])
             print("Length of the tail:", len(self.snake.tail))
             print("Number of moves:", self.number_of_moves)
 
@@ -104,7 +105,8 @@ class Game:
         """ The output after the game is over """
         if self.print_game:
             print("\n_____ Game over _____")
-            print(self.get_strategy_in_text(), "collected", len(self.snake.tail),
+            print(self.get_strategy_in_text(),
+                  "collected", len(self.snake.tail),
                   "food after", self.number_of_moves, "moves.")
         return {
             'strategy': self.get_strategy_in_text(),
@@ -150,6 +152,7 @@ class Game:
                     return Direction(vector)
             i += 2
         """
+        instead of:
         if where_coord['y'] > from_coord['y']:
             return Direction.DOWN
         elif where_coord['y'] < from_coord['y']:
@@ -162,7 +165,8 @@ class Game:
         return self.snake.dir
 
     def get_available_neighbour_fields(self, coords):
-        """ Return list of dictionaries (coordinates) that are accessible from x, y by 1 move """
+        """ Return list of dictionaries (coordinates)
+        that are accessible from x, y by 1 move """
         x = coords['x']
         y = coords['y']
         result = []

@@ -5,7 +5,8 @@ from snake import Direction
 
 
 def count_distance(coord1, coord2):
-    return ((coord1['x'] - coord2['x'])**2+(coord1['y'] - coord2['y'])**2)**(1/2)
+    return ((coord1['x'] - coord2['x'])**2
+            + (coord1['y'] - coord2['y'])**2)**(1/2)
 
 
 class Strategy:
@@ -22,13 +23,14 @@ class Strategy:
 
 
 class VectorStrategy(Strategy):
-    """ Firstly come to the same y, than to the same x"""
+    """ Firstly come to the same x, than to the same y """
     def __init__(self, game):
         super(VectorStrategy, self).__init__(game)
         self.name = Strategy.strategies[1]
 
     def think(self):
-        return self.game.get_dir_from_to(self.game.snake.head, self.game.food.coords)
+        return self.game.get_dir_from_to(self.game.snake.head,
+                                         self.game.food.coords)
 
 
 class CloserStrategy(Strategy):
