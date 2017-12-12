@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 def demo():
     """ Visual demo """
     game = Game(5, True)
-    game.set_strategy(1)
     game.game_cycle()
 
 
